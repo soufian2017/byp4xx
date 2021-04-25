@@ -41,13 +41,13 @@ then
 fi
 #Parse URL and DIR
 URL=$(echo ${@: -1} | cut -d "/" -f -3)"/"
-DIR=$(echo ${@: -1} | cut -d "/" -f 4- | sed -e 's/\/$//g')"/"
+DIR=$(echo ${@: -1} | cut -d "/" -f 4- | sed -e 's/\/$//g')
 echo
 
 #HTTP Verbs/Methods
 echo -e "\e[1m\e[32m[+]HTTP Methods...\e[0m"
 echo -n "GET request: "
-STATUS=$(curl $REDIRECT -k -s -o /dev/null -w "%{http_code}" -X GET $URL$DIR)
+STATUS=$(curl $REDIRECT -k -s -o /dev/null -w "%{http_code}" -X GET "$URL$DIR")
 if [[ ${STATUS} =~ 2.. ]]
 then
 	if [ "$OUTPUTCURL" = "Y" ]; then CURL=" => curl $REDIRECT -ki -X GET $URL$DIR"; else CURL=""; fi
@@ -168,6 +168,21 @@ fi
 echo
 #Bugbountytips methods compilation
 echo -e "\e[1m\e[32m[+]#Bugbountytips 403 bypass methods...\e[0m"
+
+echo -n "?.css payload: "
+STATUS=$(curl $REDIRECT -k -s -o /dev/null -w "%{http_code}" -X GET "$URL/$DIR?.css")
+if [[ ${STATUS} =~ 2.. ]]
+then
+	if [ "$OUTPUTCURL" = "Y" ]; then CURL=" => curl $REDIRECT -ki -X GET \"$URL/$DIR?.css\""; else CURL=""; fi
+	echo -e "\e[1m\e[32m$STATUS$CURL\e[0m"
+elif [[ ${STATUS} =~ 3.. ]]
+then 
+	echo -e "\e[1m\e[33m$STATUS\e[0m"
+
+else
+echo -e "\e[1m\e[31m$STATUS\e[0m"
+fi
+
 echo -n "%2e payload: "
 STATUS=$(curl $REDIRECT -k -s -o /dev/null -w "%{http_code}" -X GET $URL%2e/$DIR)
 if [[ ${STATUS} =~ 2.. ]]
